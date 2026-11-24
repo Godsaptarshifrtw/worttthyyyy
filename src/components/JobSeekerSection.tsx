@@ -48,6 +48,21 @@ const JobSeekerSection: React.FC = () => {
           </div>
         </div>
 
+        <a
+          href="#ats-optimizer"
+          className="mb-5 block p-3 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl transition-colors"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-purple-900 flex items-center gap-1.5">
+              <span>🎯</span>
+              <span>Need to optimize your resume for a job description?</span>
+            </span>
+            <span className="text-2xs font-semibold text-purple-700 bg-white px-2 py-0.5 rounded-md border border-purple-200 shadow-2xs">
+              Try ATS Optimizer →
+            </span>
+          </div>
+        </a>
+
         {!showResults ? (
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input

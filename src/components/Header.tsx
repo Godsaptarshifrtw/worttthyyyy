@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Activity, Menu, X } from "lucide-react";
+import { Activity, Menu, X, Target } from "lucide-react";
 import Button from "./ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  SignInButton,
-  UserButton,
-  SignedIn,
-  SignedOut,
-  SignUpButton,
-} from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +14,7 @@ const Header: React.FC = () => {
       setIsScrolled(window.scrollY > 10);
 
       // Update active section based on scroll position
-      const sections = ["features", "job-seekers", "companies"];
+      const sections = ["ats-optimizer", "features", "job-seekers", "companies"];
       const currentSection = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
@@ -38,6 +32,7 @@ const Header: React.FC = () => {
   }, []);
 
   const navLinks = [
+    { href: "#ats-optimizer", label: "ATS Optimizer" },
     { href: "#features", label: "Features" },
     { href: "#job-seekers", label: "For Job Seekers" },
     { href: "#companies", label: "For Companies" },
@@ -62,13 +57,14 @@ const Header: React.FC = () => {
               isScrolled ? "text-blue-600" : "text-white"
             } mr-2`}
           />
-          <span
+          <Link
+            to="/"
             className={`font-semibold text-xl ${
               isScrolled ? "text-slate-800" : "text-white"
             }`}
           >
             Worthy.ai
-          </span>
+          </Link>
         </motion.div>
 
         {/* Desktop Navigation */}
@@ -105,35 +101,32 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-3">
-          <SignedOut>
-          <SignInButton mode="modal" forceRedirectUrl = "/dashboard">
-              <Button
-                variant={isScrolled ? "outline" : "white"}
-                size="sm"
-                className={
-                  isScrolled ? "" : "text-blue-600 hover:text-blue-700"
-                }
-              >
-                Log in
-              </Button>
-            </SignInButton>
+          <Link
+            to="/dashboard"
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              isScrolled
+                ? "bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200"
+                : "bg-white/20 text-white hover:bg-white/30 border border-white/30 backdrop-blur-xs"
+            }`}
+          >
+            <Target className="h-4 w-4" />
+            ATS Optimizer
+            <span className="text-2xs px-1.5 py-0.5 rounded-full bg-purple-600 text-white font-bold uppercase tracking-wider">
+              AI
+            </span>
+          </Link>
 
-            <SignUpButton mode="modal" forceRedirectUrl = "/dashboard">
-              <Button
-                variant={isScrolled ? "primary" : "white"}
-                size="sm"
-                className={
-                  isScrolled ? "" : "bg-white text-blue-600 hover:bg-blue-50"
-                }
-              >
-                Sign up
-              </Button>
-            </SignUpButton>
-          </SignedOut>
-
-          <SignedIn>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+          <Link to="/dashboard">
+            <Button
+              variant={isScrolled ? "primary" : "white"}
+              size="sm"
+              className={
+                isScrolled ? "" : "bg-white text-blue-600 hover:bg-blue-50"
+              }
+            >
+              Dashboard
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -189,37 +182,19 @@ const Header: React.FC = () => {
                 </a>
               ))}
               <div className="pt-4 space-y-3">
-                <SignedOut>
-                  <SignInButton mode="modal" forceRedirectUrl = "/dashboard">
-                    <Button
-                      variant={isScrolled ? "outline" : "white"}
-                      size="sm"
-                      className={`w-full ${
-                        isScrolled ? "" : "text-blue-600 hover:text-blue-700"
-                      }`}
-                    >
-                      Log in
-                    </Button>
-                  </SignInButton>
-
-                  <SignUpButton mode="modal" forceRedirectUrl = "/dashboard">
-                    <Button
-                      variant={isScrolled ? "primary" : "white"}
-                      size="sm"
-                      className={`w-full ${
-                        isScrolled
-                          ? ""
-                          : "bg-white text-blue-600 hover:bg-blue-50"
-                      }`}
-                    >
-                      Sign up
-                    </Button>
-                  </SignUpButton>
-                </SignedOut>
-
-                <SignedIn>
-                  <UserButton afterSignOutUrl="/" />
-                </SignedIn>
+                <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button
+                    variant={isScrolled ? "primary" : "white"}
+                    size="sm"
+                    className={`w-full ${
+                      isScrolled
+                        ? ""
+                        : "bg-white text-blue-600 hover:bg-blue-50"
+                    }`}
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
               </div>
             </nav>
           </motion.div>

@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import { Check, Github, Linkedin, Loader2 } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-
-
-// Initialize the Google GenAI with your API key
-const genAI = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GOOGLE_GENAI_API_KEY,
-});
+import Button from './ui/Button';
+import Input from './ui/Input';
+import { callOpenRouterAI } from '../lib/openrouter';
 
 
 const DashboardCard: React.FC = () => {
@@ -162,38 +156,19 @@ Return everything in **JSON format**, using the following schema:
   
 Job details: ${JSON.stringify(promptData)}`;
 
-      // Call the Gemini model
-      const model = genAI.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: prompt,
+      // Call OpenRouter with selected DeepSeek model
+      const jsonResponse = await callOpenRouterAI({
+        prompt,
       });
-
-      const result = await model;
-
-      // Parse the JSON response from the text
-      let jsonResponse;
-      try {
-        // Extract JSON from the text response
-        const responseText = result.text;
-        // Find JSON content (assuming it's wrapped in ```json and ``` or just plain JSON)
-        const jsonMatch = responseText?.match(/```json\n([\s\S]*?)\n```/) ||
-          responseText?.match(/```([\s\S]*?)```/) || [null, responseText];
-
-        jsonResponse =
-          jsonMatch && jsonMatch[1] ? JSON.parse(jsonMatch[1].trim()) : null;
-      } catch (parseError) {
-        console.error("Error parsing JSON response:", parseError);
-        throw new Error("Failed to parse AI response");
-      }
 
       // Set the results
       setCandidateResults(jsonResponse);
-    } catch (error) {
-      console.error("Error calling Gemini API:", error);
+    } catch (error: any) {
+      console.error("Error calling OpenRouter API:", error);
       // Show error state
       setCandidateResults({
         error: true,
-        message: "Failed to analyze job offer. Please try again.",
+        message: error?.message || "Failed to analyze job offer. Please try again.",
       });
     } finally {
       setCandidateLoading(false);
